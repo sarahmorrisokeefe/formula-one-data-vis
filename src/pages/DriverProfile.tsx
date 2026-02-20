@@ -173,7 +173,7 @@ export function DriverProfile() {
               ].map(({ label, value, icon: Icon }) => (
                 <div key={label} className="text-center">
                   <Icon className="h-5 w-5 mx-auto mb-1 text-gray-500" />
-                  <div className="text-2xl font-bold text-white">{value}</div>
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white">{value}</div>
                   <div className="text-xs text-gray-500">{label}</div>
                 </div>
               ))}
@@ -184,7 +184,7 @@ export function DriverProfile() {
 
       {/* Career Arc */}
       <Card>
-        <h2 className="font-semibold text-white mb-1">Career Points Arc</h2>
+        <h2 className="font-semibold text-gray-900 dark:text-white mb-1">Career Points Arc</h2>
         <p className="text-xs text-gray-500 mb-4">Total championship points per season</p>
         {careerQuery.isLoading ? (
           <Skeleton variant="chart" height={240} />
@@ -246,7 +246,7 @@ export function DriverProfile() {
 
       {/* Season Results Table */}
       <Card>
-        <h2 className="font-semibold text-white mb-4">{season} Season Results</h2>
+        <h2 className="font-semibold text-gray-900 dark:text-white mb-4">{season} Season Results</h2>
         {seasonQuery.isLoading ? (
           <Skeleton variant="chart" height={320} />
         ) : (
@@ -306,7 +306,7 @@ export function DriverProfile() {
       {/* Grid vs Finish Scatter */}
       {scatterData.length > 0 && (
         <Card>
-          <h2 className="font-semibold text-white mb-1">Qualifying vs Race Performance</h2>
+          <h2 className="font-semibold text-gray-900 dark:text-white mb-1">Qualifying vs Race Performance</h2>
           <p className="text-xs text-gray-500 mb-4">
             Grid position vs finishing position — dots above diagonal = improved during race
           </p>
@@ -368,7 +368,7 @@ export function DriverProfile() {
       {/* Season Points Chart */}
       {seasonResults.length > 0 && (
         <Card>
-          <h2 className="font-semibold text-white mb-1">{season} Points per Race</h2>
+          <h2 className="font-semibold text-gray-900 dark:text-white mb-1">{season} Points per Race</h2>
           <p className="text-xs text-gray-500 mb-4">Points scored in each race weekend</p>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={seasonResults}>

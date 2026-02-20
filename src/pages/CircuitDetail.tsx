@@ -7,6 +7,7 @@ import { getConstructorColor } from '@/constants/f1'
 import { Card } from '@/components/ui/Card'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { ErrorState } from '@/components/ui/ErrorState'
+import { CircuitMap } from '@/components/charts/CircuitMap'
 
 function lapTimeToSeconds(time: string): number | null {
   if (!time) return null
@@ -51,7 +52,7 @@ export function CircuitDetail() {
     <div className="space-y-6">
       <Link
         to="/circuits"
-        className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-300 transition-colors"
+        className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
         Back to Circuits
@@ -59,7 +60,7 @@ export function CircuitDetail() {
 
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-white">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
           {circuit?.circuitName ?? circuitId}
         </h1>
         {circuit && (
@@ -70,41 +71,47 @@ export function CircuitDetail() {
         )}
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <Card className="text-center">
-          <div className="text-2xl font-bold text-white">{races.length}</div>
-          <div className="text-xs text-gray-500 mt-1">Grand Prix held</div>
-        </Card>
-        <Card className="text-center">
-          <div className="text-2xl font-bold text-white">
-            {races[0] ? Number(races[0].season) : '—'}
-          </div>
-          <div className="text-xs text-gray-500 mt-1">First Grand Prix</div>
-        </Card>
-        <Card className="text-center">
-          <div className="text-lg font-bold text-white">
-            {lapRecord?.time ?? '—'}
-          </div>
-          <div className="text-xs text-gray-500 mt-1">Lap record</div>
-          {lapRecord && (
-            <div className="text-xs text-gray-600">{lapRecord.driver} ({lapRecord.year})</div>
-          )}
-        </Card>
-        <Card className="text-center">
-          <div className="text-lg font-bold text-white">
-            {circuit?.Location.lat && circuit?.Location.long
-              ? `${Number(circuit.Location.lat).toFixed(2)}°`
-              : '—'}
-          </div>
-          <div className="text-xs text-gray-500 mt-1">Latitude</div>
-        </Card>
+      {/* Circuit Map + Stats side by side on large screens */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Circuit Map */}
+        {circuitId && <CircuitMap circuitId={circuitId} />}
+
+        {/* Stats */}
+        <div className="grid grid-cols-2 gap-4 content-start">
+          <Card className="text-center">
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">{races.length}</div>
+            <div className="text-xs text-gray-500 mt-1">Grand Prix held</div>
+          </Card>
+          <Card className="text-center">
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">
+              {races[0] ? Number(races[0].season) : '—'}
+            </div>
+            <div className="text-xs text-gray-500 mt-1">First Grand Prix</div>
+          </Card>
+          <Card className="text-center">
+            <div className="text-lg font-bold text-gray-900 dark:text-white">
+              {lapRecord?.time ?? '—'}
+            </div>
+            <div className="text-xs text-gray-500 mt-1">Lap record</div>
+            {lapRecord && (
+              <div className="text-xs text-gray-600">{lapRecord.driver} ({lapRecord.year})</div>
+            )}
+          </Card>
+          <Card className="text-center">
+            <div className="text-lg font-bold text-gray-900 dark:text-white">
+              {circuit?.Location.lat && circuit?.Location.long
+                ? `${Number(circuit.Location.lat).toFixed(2)}°`
+                : '—'}
+            </div>
+            <div className="text-xs text-gray-500 mt-1">Latitude</div>
+          </Card>
+        </div>
       </div>
 
       {/* Lap Record Progression */}
       {lapRecordData.length > 2 && (
         <Card>
-          <h2 className="font-semibold text-white mb-1">Lap Record Progression</h2>
+          <h2 className="font-semibold text-gray-900 dark:text-white mb-1">Lap Record Progression</h2>
           <p className="text-xs text-gray-500 mb-4">Fastest race lap each year</p>
           <ResponsiveContainer width="100%" height={220}>
             <LineChart data={lapRecordData}>
@@ -149,7 +156,7 @@ export function CircuitDetail() {
 
       {/* Winner History */}
       <Card>
-        <h2 className="font-semibold text-white mb-4 flex items-center gap-2">
+        <h2 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
           <Trophy className="h-4 w-4 text-[#e10600]" />
           Race Winners
         </h2>
@@ -160,7 +167,7 @@ export function CircuitDetail() {
         ) : (
           <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
             <table className="w-full text-sm">
-              <thead className="sticky top-0 bg-[#0d0d17]">
+              <thead className="sticky top-0 bg-white dark:bg-[#0d0d17]">
                 <tr className="text-xs uppercase tracking-wider text-gray-500 border-b border-white/[0.06]">
                   <th className="pb-3 text-left">Year</th>
                   <th className="pb-3 text-left">Winner</th>
@@ -177,7 +184,7 @@ export function CircuitDetail() {
                     <tr key={race.season} className="hover:bg-white/[0.03] transition-colors">
                       <td className="py-2.5 font-mono text-gray-400">{race.season}</td>
                       <td className="py-2.5">
-                        <span className="font-semibold text-white">
+                        <span className="font-semibold text-gray-900 dark:text-white">
                           {winner.Driver.givenName} {winner.Driver.familyName}
                         </span>
                       </td>

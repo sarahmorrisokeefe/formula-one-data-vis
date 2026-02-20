@@ -95,7 +95,7 @@ export function Dashboard() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-white">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
           {season} Season
         </h1>
         <p className="text-gray-500 mt-1">
@@ -154,7 +154,7 @@ export function Dashboard() {
         {/* Driver Standings */}
         <Card>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-white flex items-center gap-2">
+            <h2 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
               <Trophy className="h-4 w-4 text-[#e10600]" />
               Driver Standings
             </h2>
@@ -185,7 +185,7 @@ export function Dashboard() {
                     style={{ backgroundColor: entry.constructor.color }}
                   />
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-semibold text-white group-hover:text-[#e10600] transition-colors truncate">
+                    <div className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-[#e10600] transition-colors truncate">
                       {entry.driver.firstName} {entry.driver.lastName}
                     </div>
                     <div className="text-xs text-gray-500">
@@ -193,7 +193,7 @@ export function Dashboard() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm font-bold text-white">
+                    <div className="text-sm font-bold text-gray-900 dark:text-white">
                       {entry.points}
                     </div>
                     <div className="text-xs text-gray-600">pts</div>
@@ -207,7 +207,7 @@ export function Dashboard() {
         {/* Constructor Standings */}
         <Card>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-white flex items-center gap-2">
+            <h2 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
               <Building2 className="h-4 w-4 text-[#e10600]" />
               Constructor Standings
             </h2>
@@ -237,7 +237,7 @@ export function Dashboard() {
                     color={entry.constructor.color}
                   />
                   <div className="flex-1" />
-                  <div className="text-sm font-bold text-white">
+                  <div className="text-sm font-bold text-gray-900 dark:text-white">
                     {entry.points}
                     <span className="ml-1 text-xs font-normal text-gray-600">pts</span>
                   </div>
@@ -254,7 +254,7 @@ export function Dashboard() {
         <Card>
           <div className="flex items-center gap-2 mb-4">
             <TrendingUp className="h-4 w-4 text-[#e10600]" />
-            <h2 className="font-semibold text-white">Top 3 Points</h2>
+            <h2 className="font-semibold text-gray-900 dark:text-white">Top 3 Points</h2>
           </div>
           {driversQuery.isLoading ? (
             <Skeleton variant="chart" height={160} />
@@ -296,7 +296,7 @@ export function Dashboard() {
         {/* Race Schedule */}
         <Card>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-white flex items-center gap-2">
+            <h2 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
               <Calendar className="h-4 w-4 text-[#e10600]" />
               Race Calendar
             </h2>
@@ -326,7 +326,7 @@ export function Dashboard() {
                       R{race.round}
                     </span>
                     <span
-                      className={`flex-1 truncate ${isPast ? 'text-gray-400' : isNext ? 'text-white font-medium' : 'text-gray-300'}`}
+                      className={`flex-1 truncate ${isPast ? 'text-gray-400' : isNext ? 'text-gray-900 dark:text-white font-medium' : 'text-gray-300'}`}
                     >
                       {race.raceName.replace(' Grand Prix', '')}
                     </span>

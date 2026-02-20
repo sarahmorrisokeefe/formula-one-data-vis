@@ -105,7 +105,7 @@ export function ConstructorsChampionship() {
 
       {/* Standings Table */}
       <Card>
-        <h2 className="font-semibold text-white mb-4">Constructor Standings</h2>
+        <h2 className="font-semibold text-gray-900 dark:text-white mb-4">Constructor Standings</h2>
         {standingsQuery.isLoading ? (
           <Skeleton variant="chart" height={320} />
         ) : standingsQuery.isError ? (
@@ -175,7 +175,7 @@ export function ConstructorsChampionship() {
 
       {/* Constructor Points Evolution */}
       <Card>
-        <h2 className="font-semibold text-white mb-1">Points Progression</h2>
+        <h2 className="font-semibold text-gray-900 dark:text-white mb-1">Points Progression</h2>
         <p className="text-xs text-gray-500 mb-4">
           Cumulative constructor points after each round
         </p>
@@ -227,7 +227,7 @@ export function ConstructorsChampionship() {
 
       {/* Points Bar */}
       <Card>
-        <h2 className="font-semibold text-white mb-4">Total Points Comparison</h2>
+        <h2 className="font-semibold text-gray-900 dark:text-white mb-4">Total Points Comparison</h2>
         {standingsQuery.isLoading ? (
           <Skeleton variant="chart" height={220} />
         ) : (

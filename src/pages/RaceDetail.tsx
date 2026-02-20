@@ -89,7 +89,7 @@ export function RaceDetail() {
           <ArrowLeft className="h-4 w-4" />
           Back to Calendar
         </Link>
-        <h1 className="text-3xl font-bold tracking-tight text-white">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
           {race?.raceName ?? `Round ${roundNum}`}
         </h1>
         <p className="text-gray-500 mt-1">
@@ -101,7 +101,7 @@ export function RaceDetail() {
 
       {/* Race Results Table */}
       <Card>
-        <h2 className="font-semibold text-white mb-4 flex items-center gap-2">
+        <h2 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
           <Timer className="h-4 w-4 text-[#e10600]" />
           Race Classification
         </h2>
@@ -149,7 +149,7 @@ export function RaceDetail() {
                           className="h-6 w-0.5 rounded-full"
                           style={{ backgroundColor: r.constructor.color }}
                         />
-                        <span className="font-semibold text-white">
+                        <span className="font-semibold text-gray-900 dark:text-white">
                           {r.driver.firstName} {r.driver.lastName}
                         </span>
                         {r.fastestLapRank === 1 && (
@@ -196,7 +196,7 @@ export function RaceDetail() {
       {/* Qualifying Delta */}
       {qualifying.length > 0 && (
         <Card>
-          <h2 className="font-semibold text-white mb-1">Qualifying Gap to Pole</h2>
+          <h2 className="font-semibold text-gray-900 dark:text-white mb-1">Qualifying Gap to Pole</h2>
           <p className="text-xs text-gray-500 mb-4">
             Best lap time delta to pole position
           </p>
@@ -248,7 +248,7 @@ export function RaceDetail() {
       {lapTimes.length > 0 && results.length > 0 && (
         <Card padding="none">
           <div className="p-4 pb-2">
-            <h2 className="font-semibold text-white mb-1">Race Position History</h2>
+            <h2 className="font-semibold text-gray-900 dark:text-white mb-1">Race Position History</h2>
             <p className="text-xs text-gray-500">Lap-by-lap position changes</p>
           </div>
           <LapPositionChart lapTimes={lapTimes} results={results} />
@@ -259,7 +259,7 @@ export function RaceDetail() {
       {(pitStops.length > 0 || lapTimes.length > 0) && results.length > 0 && (
         <Card padding="none">
           <div className="p-4 pb-2">
-            <h2 className="font-semibold text-white mb-1">Pit Stop Strategy</h2>
+            <h2 className="font-semibold text-gray-900 dark:text-white mb-1">Pit Stop Strategy</h2>
             <p className="text-xs text-gray-500">
               Pit stops and stint lengths
             </p>
@@ -275,7 +275,7 @@ export function RaceDetail() {
       {/* Fastest Laps */}
       {fastestLaps.length > 0 && (
         <Card>
-          <h2 className="font-semibold text-white mb-4 flex items-center gap-2">
+          <h2 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <Zap className="h-4 w-4 text-purple-400" />
             Fastest Laps
           </h2>

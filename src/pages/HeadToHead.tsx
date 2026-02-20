@@ -272,7 +272,7 @@ export function HeadToHead() {
 
           {/* Radar Chart */}
           <Card>
-            <h2 className="font-semibold text-white mb-4">Performance Radar</h2>
+            <h2 className="font-semibold text-gray-900 dark:text-white mb-4">Performance Radar</h2>
             <ResponsiveContainer width="100%" height={320}>
               <RadarChart data={radarData}>
                 <PolarGrid stroke="#ffffff10" />
@@ -313,7 +313,7 @@ export function HeadToHead() {
           {/* Points Over Time */}
           {pointsOverTimeData.length > 0 && (
             <Card>
-              <h2 className="font-semibold text-white mb-4">Points Progression</h2>
+              <h2 className="font-semibold text-gray-900 dark:text-white mb-4">Points Progression</h2>
               <ResponsiveContainer width="100%" height={260}>
                 <LineChart data={pointsOverTimeData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#ffffff0a" />

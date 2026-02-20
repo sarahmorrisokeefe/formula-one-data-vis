@@ -152,7 +152,7 @@ export function PerformanceAnalysis() {
       {/* Heatmap */}
       <Card padding="none">
         <div className="p-4 pb-2">
-          <h2 className="font-semibold text-white mb-1">Driver Performance Heatmap</h2>
+          <h2 className="font-semibold text-gray-900 dark:text-white mb-1">Driver Performance Heatmap</h2>
           <p className="text-xs text-gray-500">
             Finish position by round — red = P1, dark = DNF/DNS
           </p>
@@ -169,7 +169,7 @@ export function PerformanceAnalysis() {
       {/* DNF Tracker */}
       {dnfData.length > 0 && (
         <Card>
-          <h2 className="font-semibold text-white mb-1">DNF Tracker</h2>
+          <h2 className="font-semibold text-gray-900 dark:text-white mb-1">DNF Tracker</h2>
           <p className="text-xs text-gray-500 mb-4">
             Retirements by category — drivers with at least one DNF
           </p>
@@ -223,7 +223,7 @@ export function PerformanceAnalysis() {
       {/* Constructor Reliability */}
       {reliabilityData.length > 0 && (
         <Card>
-          <h2 className="font-semibold text-white mb-1">Constructor Reliability</h2>
+          <h2 className="font-semibold text-gray-900 dark:text-white mb-1">Constructor Reliability</h2>
           <p className="text-xs text-gray-500 mb-4">Percentage of race entries classified as Finished</p>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart

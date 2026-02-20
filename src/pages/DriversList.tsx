@@ -80,7 +80,7 @@ export function DriversList() {
                 </h3>
                 <p className="text-xs text-gray-500 mt-1">{entry.constructor.name}</p>
                 <div className="flex items-baseline gap-1 mt-3">
-                  <span className="text-xl font-bold text-white">{entry.points}</span>
+                  <span className="text-xl font-bold text-gray-900 dark:text-white">{entry.points}</span>
                   <span className="text-xs text-gray-600">pts</span>
                   <span className="ml-auto text-xs text-gray-600">{entry.wins}W</span>
                 </div>
