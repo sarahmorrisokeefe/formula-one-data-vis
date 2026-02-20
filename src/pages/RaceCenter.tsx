@@ -16,7 +16,7 @@ export function RaceCenter() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-3">
           <Flag className="h-7 w-7 text-[#e10600]" />
           {season} Race Calendar
         </h1>
@@ -70,7 +70,7 @@ export function RaceCenter() {
                       )}
                     </div>
                   </div>
-                  <h3 className="font-semibold text-white group-hover:text-[#e10600] transition-colors leading-tight mb-1">
+                  <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-[#e10600] transition-colors leading-tight mb-1">
                     {race.raceName}
                   </h3>
                   <div className="flex items-center gap-1 text-xs text-gray-500 mb-1">

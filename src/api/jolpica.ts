@@ -1,6 +1,5 @@
 import type {
   JolpicaResponse,
-  SeasonTable,
   StandingsTable,
   RaceTable,
   CircuitTable,
@@ -15,10 +14,10 @@ async function fetchJSON<T>(url: string): Promise<T> {
 }
 
 export async function getSeasonSchedule(season: number) {
-  const data = await fetchJSON<JolpicaResponse<SeasonTable>>(
+  const data = await fetchJSON<JolpicaResponse<RaceTable>>(
     `${BASE}/${season}.json?limit=30`
   )
-  return data.MRData.SeasonTable.Races
+  return data.MRData.RaceTable.Races
 }
 
 export async function getDriverStandings(season: number, round?: number) {

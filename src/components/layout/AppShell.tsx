@@ -3,7 +3,7 @@ import { Topbar } from './Topbar'
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-[#0d0d17] text-white dark:bg-[#0d0d17] dark:text-white light:bg-gray-50 light:text-gray-900">
+    <div className="flex h-screen w-full overflow-hidden bg-gray-50 text-gray-900 dark:bg-[#0d0d17] dark:text-white">
       <Sidebar />
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
         <Topbar />

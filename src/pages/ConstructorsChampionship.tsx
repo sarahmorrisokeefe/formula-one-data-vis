@@ -94,7 +94,7 @@ export function ConstructorsChampionship() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-3">
           <Building2 className="h-7 w-7 text-[#e10600]" />
           {season} Constructors Championship
         </h1>
@@ -105,7 +105,7 @@ export function ConstructorsChampionship() {
 
       {/* Standings Table */}
       <Card>
-        <h2 className="font-semibold text-white mb-4">Constructor Standings</h2>
+        <h2 className="font-semibold text-gray-900 dark:text-white mb-4">Constructor Standings</h2>
         {standingsQuery.isLoading ? (
           <Skeleton variant="chart" height={320} />
         ) : standingsQuery.isError ? (
@@ -155,7 +155,7 @@ export function ConstructorsChampionship() {
                       <td className="py-3 text-gray-400 text-xs">
                         {entry.constructor.nationality}
                       </td>
-                      <td className="py-3 text-right font-bold text-white">
+                      <td className="py-3 text-right font-bold text-gray-900 dark:text-white">
                         {entry.points}
                       </td>
                       <td className="py-3 text-right text-gray-400">
@@ -175,7 +175,7 @@ export function ConstructorsChampionship() {
 
       {/* Constructor Points Evolution */}
       <Card>
-        <h2 className="font-semibold text-white mb-1">Points Progression</h2>
+        <h2 className="font-semibold text-gray-900 dark:text-white mb-1">Points Progression</h2>
         <p className="text-xs text-gray-500 mb-4">
           Cumulative constructor points after each round
         </p>
@@ -227,7 +227,7 @@ export function ConstructorsChampionship() {
 
       {/* Points Bar */}
       <Card>
-        <h2 className="font-semibold text-white mb-4">Total Points Comparison</h2>
+        <h2 className="font-semibold text-gray-900 dark:text-white mb-4">Total Points Comparison</h2>
         {standingsQuery.isLoading ? (
           <Skeleton variant="chart" height={220} />
         ) : (

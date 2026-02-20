@@ -25,7 +25,7 @@ export function DriversList() {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-3">
             <Users className="h-7 w-7 text-[#e10600]" />
             {season} Drivers
           </h1>
@@ -38,7 +38,7 @@ export function DriversList() {
             placeholder="Search drivers..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 pr-4 py-2 rounded-lg border border-white/10 bg-white/[0.05] text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-[#e10600]/50"
+            className="pl-9 pr-4 py-2 rounded-lg border border-gray-200 bg-white text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#e10600]/50 dark:border-white/10 dark:bg-white/[0.05] dark:text-gray-200 dark:placeholder-gray-600"
           />
         </div>
       </div>
@@ -73,14 +73,14 @@ export function DriversList() {
                   className="h-0.5 w-10 rounded-full mb-3"
                   style={{ backgroundColor: entry.constructor.color }}
                 />
-                <h3 className="font-bold text-white group-hover:text-[#e10600] transition-colors leading-tight">
+                <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-[#e10600] transition-colors leading-tight">
                   {entry.driver.firstName}
                   <br />
                   {entry.driver.lastName}
                 </h3>
                 <p className="text-xs text-gray-500 mt-1">{entry.constructor.name}</p>
                 <div className="flex items-baseline gap-1 mt-3">
-                  <span className="text-xl font-bold text-white">{entry.points}</span>
+                  <span className="text-xl font-bold text-gray-900 dark:text-white">{entry.points}</span>
                   <span className="text-xs text-gray-600">pts</span>
                   <span className="ml-auto text-xs text-gray-600">{entry.wins}W</span>
                 </div>

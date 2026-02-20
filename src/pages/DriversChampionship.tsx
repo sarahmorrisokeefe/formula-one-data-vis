@@ -78,7 +78,7 @@ export function DriversChampionship() {
     <div className="space-y-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-3">
             <Trophy className="h-7 w-7 text-[#e10600]" />
             {season} Drivers Championship
           </h1>
@@ -103,7 +103,7 @@ export function DriversChampionship() {
 
       {/* Standings Table */}
       <Card>
-        <h2 className="font-semibold text-white mb-4">Current Standings</h2>
+        <h2 className="font-semibold text-gray-900 dark:text-white mb-4">Current Standings</h2>
         {standingsQuery.isLoading ? (
           <Skeleton variant="chart" height={400} />
         ) : standingsQuery.isError ? (
@@ -146,7 +146,7 @@ export function DriversChampionship() {
                             style={{ backgroundColor: entry.constructor.color }}
                           />
                           <div>
-                            <div className="font-semibold text-white">
+                            <div className="font-semibold text-gray-900 dark:text-white">
                               {entry.driver.firstName} {entry.driver.lastName}
                             </div>
                             <div className="text-xs text-gray-600">
@@ -163,7 +163,7 @@ export function DriversChampionship() {
                           {entry.constructor.name}
                         </span>
                       </td>
-                      <td className="py-3 text-right font-bold text-white">
+                      <td className="py-3 text-right font-bold text-gray-900 dark:text-white">
                         {entry.points}
                       </td>
                       <td className="py-3 text-right text-gray-400">
@@ -183,7 +183,7 @@ export function DriversChampionship() {
 
       {/* Points Evolution */}
       <Card>
-        <h2 className="font-semibold text-white mb-1">Points Progression</h2>
+        <h2 className="font-semibold text-gray-900 dark:text-white mb-1">Points Progression</h2>
         <p className="text-xs text-gray-500 mb-4">Cumulative points after each round</p>
         {overTimeQuery.isLoading ? (
           <Skeleton variant="chart" height={320} />
@@ -232,7 +232,7 @@ export function DriversChampionship() {
 
       {/* Gap to Leader */}
       <Card>
-        <h2 className="font-semibold text-white mb-1 flex items-center gap-2">
+        <h2 className="font-semibold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
           <TrendingDown className="h-4 w-4 text-[#e10600]" />
           Gap to Championship Leader
         </h2>
@@ -285,7 +285,7 @@ export function DriversChampionship() {
 
       {/* Points per Driver Bar */}
       <Card>
-        <h2 className="font-semibold text-white mb-4">Points Distribution</h2>
+        <h2 className="font-semibold text-gray-900 dark:text-white mb-4">Points Distribution</h2>
         {standingsQuery.isLoading ? (
           <Skeleton variant="chart" height={260} />
         ) : (

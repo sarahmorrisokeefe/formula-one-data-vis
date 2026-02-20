@@ -12,7 +12,9 @@ export function SeasonProvider({ children }: { children: React.ReactNode }) {
   const [season, setSeason] = useState<number>(() => {
     const stored = localStorage.getItem('f1-season')
     const parsed = stored ? parseInt(stored, 10) : NaN
-    return !isNaN(parsed) ? parsed : CURRENT_YEAR
+    // Before April, default to the previous year (current season hasn't started)
+    const defaultSeason = new Date().getMonth() < 3 ? CURRENT_YEAR - 1 : CURRENT_YEAR
+    return !isNaN(parsed) ? parsed : defaultSeason
   })
 
   const handleSetSeason = (year: number) => {

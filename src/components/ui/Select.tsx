@@ -16,7 +16,7 @@ export function Select({ value, onChange, options, className = '', label }: Sele
         <select
           value={value}
           onChange={e => onChange(e.target.value)}
-          className="appearance-none cursor-pointer rounded-lg border border-white/10 bg-white/5 dark:bg-white/[0.05] px-3 py-2 pr-8 text-sm font-medium text-gray-100 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-[#e10600]/50 hover:bg-white/10 transition-colors"
+          className="appearance-none cursor-pointer rounded-lg border border-gray-200 bg-white px-3 py-2 pr-8 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#e10600]/50 hover:bg-gray-50 transition-colors dark:border-white/10 dark:bg-white/[0.05] dark:text-gray-200 dark:hover:bg-white/10"
         >
           {options.map(opt => (
             <option
