@@ -78,7 +78,7 @@ export function DriversChampionship() {
     <div className="space-y-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-3">
             <Trophy className="h-7 w-7 text-[#e10600]" />
             {season} Drivers Championship
           </h1>
@@ -163,7 +163,7 @@ export function DriversChampionship() {
                           {entry.constructor.name}
                         </span>
                       </td>
-                      <td className="py-3 text-right font-bold text-white">
+                      <td className="py-3 text-right font-bold text-gray-900 dark:text-white">
                         {entry.points}
                       </td>
                       <td className="py-3 text-right text-gray-400">
@@ -232,7 +232,7 @@ export function DriversChampionship() {
 
       {/* Gap to Leader */}
       <Card>
-        <h2 className="font-semibold text-white mb-1 flex items-center gap-2">
+        <h2 className="font-semibold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
           <TrendingDown className="h-4 w-4 text-[#e10600]" />
           Gap to Championship Leader
         </h2>

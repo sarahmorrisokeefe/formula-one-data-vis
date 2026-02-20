@@ -147,7 +147,7 @@ export function DriverProfile() {
                   ),
                 }}
               />
-              <h1 className="text-3xl font-bold text-white">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                 {driver.givenName} {driver.familyName}
               </h1>
               <p className="text-gray-400 mt-1">
@@ -281,7 +281,7 @@ export function DriverProfile() {
                     >
                       {r.finish || '—'}
                     </td>
-                    <td className="py-2.5 text-right text-white font-bold">
+                    <td className="py-2.5 text-right text-gray-900 dark:text-white font-bold">
                       {r.points || '—'}
                     </td>
                     <td className="py-2.5 text-right">

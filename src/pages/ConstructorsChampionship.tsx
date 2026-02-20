@@ -94,7 +94,7 @@ export function ConstructorsChampionship() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-3">
           <Building2 className="h-7 w-7 text-[#e10600]" />
           {season} Constructors Championship
         </h1>
@@ -155,7 +155,7 @@ export function ConstructorsChampionship() {
                       <td className="py-3 text-gray-400 text-xs">
                         {entry.constructor.nationality}
                       </td>
-                      <td className="py-3 text-right font-bold text-white">
+                      <td className="py-3 text-right font-bold text-gray-900 dark:text-white">
                         {entry.points}
                       </td>
                       <td className="py-3 text-right text-gray-400">

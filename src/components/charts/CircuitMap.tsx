@@ -4,48 +4,50 @@ import * as d3 from 'd3'
 import { Card } from '@/components/ui/Card'
 
 // Maps Jolpica circuitId → bacinger/f1-circuits filename (without .geojson)
-// Default fallback: replace underscores with hyphens
+// The bacinger repo uses: {ISO_country_code}-{year_circuit_opened}
+// Source: https://github.com/bacinger/f1-circuits
 const CIRCUIT_ID_MAP: Record<string, string> = {
-  albert_park: 'albert-park',
-  americas: 'americas',
-  bahrain: 'bahrain',
-  baku: 'baku',
-  catalunya: 'catalunya',
-  hungaroring: 'hungaroring',
-  imola: 'imola',
-  jeddah: 'jeddah',
-  miami: 'miami',
-  monaco: 'monaco',
-  monza: 'monza',
-  red_bull_ring: 'red-bull-ring',
-  rodriguez: 'rodriguez',
-  silverstone: 'silverstone',
-  singapore: 'marina-bay',
-  spa: 'spa-francorchamps',
-  suzuka: 'suzuka',
-  yas_marina: 'yas-marina',
-  zandvoort: 'zandvoort',
-  interlagos: 'interlagos',
-  las_vegas: 'las-vegas',
-  losail: 'losail',
-  shanghai: 'shanghai',
-  villeneuve: 'villeneuve',
-  portimao: 'portimao',
-  mugello: 'mugello',
-  nurburgring: 'nurburgring',
-  istanbul: 'istanbul',
-  bahrain_outer: 'bahrain-outer',
-}
-
-function getBackingerId(circuitId: string): string {
-  return CIRCUIT_ID_MAP[circuitId] ?? circuitId.replace(/_/g, '-')
+  albert_park:    'au-1953', // Melbourne, Australia
+  americas:       'us-2012', // Circuit of the Americas
+  bahrain:        'bh-2002',
+  baku:           'az-2016',
+  catalunya:      'es-1991', // Barcelona
+  hungaroring:    'hu-1986',
+  imola:          'it-1953', // Autodromo Enzo e Dino Ferrari
+  jeddah:         'sa-2021',
+  miami:          'us-2022',
+  monaco:         'mc-1929',
+  monza:          'it-1922',
+  red_bull_ring:  'at-1969',
+  rodriguez:      'mx-1962', // Autodromo Hermanos Rodriguez
+  silverstone:    'gb-1948',
+  singapore:      'sg-2008', // Marina Bay Street Circuit
+  spa:            'be-1925', // Spa-Francorchamps
+  suzuka:         'jp-1962',
+  yas_marina:     'ae-2009', // Abu Dhabi
+  zandvoort:      'nl-1948',
+  interlagos:     'br-1977', // Sao Paulo current layout
+  las_vegas:      'us-2023',
+  losail:         'qa-2004',
+  shanghai:       'cn-2004',
+  villeneuve:     'ca-1978', // Circuit Gilles Villeneuve
+  portimao:       'pt-2008',
+  nurburgring:    'de-1927',
+  hockenheimring: 'de-1932',
+  istanbul:       'tr-2005',
+  sepang:         'my-1999',
+  estoril:        'pt-1972',
+  kyalami:        'za-1961',
+  sochi:          'ru-2014',
+  buenos_aires:   'ar-1952',
 }
 
 async function fetchCircuitGeoJSON(circuitId: string) {
-  const id = getBackingerId(circuitId)
+  const id = CIRCUIT_ID_MAP[circuitId]
+  if (!id) throw new Error(`No circuit map available for "${circuitId}"`)
   const url = `https://raw.githubusercontent.com/bacinger/f1-circuits/master/circuits/${id}.geojson`
   const res = await fetch(url)
-  if (!res.ok) throw new Error(`Circuit map not available for "${id}"`)
+  if (!res.ok) throw new Error(`Circuit map fetch failed for "${id}" (${res.status})`)
   return res.json()
 }
 
@@ -95,7 +97,7 @@ export function CircuitMap({ circuitId }: Props) {
 
     const g = svg.append('g')
 
-    // Shadow / glow path (dark mode visual effect)
+    // Subtle glow behind track line
     g.selectAll('path.glow')
       .data(features)
       .enter()
@@ -108,7 +110,7 @@ export function CircuitMap({ circuitId }: Props) {
       .attr('stroke-width', 8)
       .attr('stroke-linecap', 'round')
       .attr('stroke-linejoin', 'round')
-      .attr('opacity', 0.15)
+      .attr('opacity', 0.12)
 
     // Main circuit line
     g.selectAll('path.track')
@@ -129,7 +131,7 @@ export function CircuitMap({ circuitId }: Props) {
     return () => clearTimeout(tid)
   }, [query.data])
 
-  // Silently hide if map is unavailable
+  // Silently hide if circuit isn't in the map or fetch fails
   if (query.isError) return null
 
   return (
