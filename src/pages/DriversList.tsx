@@ -25,8 +25,8 @@ export function DriversList() {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-3">
-            <Users className="h-7 w-7 text-[#e10600]" />
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-3 sm:text-3xl">
+            <Users className="h-6 w-6 text-[#e10600] sm:h-7 sm:w-7" />
             {season} Drivers
           </h1>
           <p className="text-gray-500 mt-1">Select a driver to view their full profile</p>

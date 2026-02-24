@@ -76,15 +76,15 @@ export function DriversChampionship() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-3">
-            <Trophy className="h-7 w-7 text-[#e10600]" />
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-3 sm:text-3xl">
+            <Trophy className="h-6 w-6 text-[#e10600] sm:h-7 sm:w-7" />
             {season} Drivers Championship
           </h1>
           <p className="text-gray-500 mt-1">Points standings and season trajectory</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           {(['3', '5', '10', 'all'] as string[]).map((v) => (
             <button
               key={v}

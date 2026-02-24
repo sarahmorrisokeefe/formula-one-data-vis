@@ -147,7 +147,7 @@ export function DriverProfile() {
                   ),
                 }}
               />
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
                 {driver.givenName} {driver.familyName}
               </h1>
               <p className="text-gray-400 mt-1">

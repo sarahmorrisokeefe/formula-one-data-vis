@@ -89,7 +89,7 @@ export function RaceDetail() {
           <ArrowLeft className="h-4 w-4" />
           Back to Calendar
         </Link>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
           {race?.raceName ?? `Round ${roundNum}`}
         </h1>
         <p className="text-gray-500 mt-1">
