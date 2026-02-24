@@ -60,7 +60,7 @@ export function CircuitDetail() {
 
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
           {circuit?.circuitName ?? circuitId}
         </h1>
         {circuit && (

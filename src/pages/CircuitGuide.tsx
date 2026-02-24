@@ -32,8 +32,8 @@ export function CircuitGuide() {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-3">
-            <MapPin className="h-7 w-7 text-[#e10600]" />
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-3 sm:text-3xl">
+            <MapPin className="h-6 w-6 text-[#e10600] sm:h-7 sm:w-7" />
             Circuit Guide
           </h1>
           <p className="text-gray-500 mt-1">

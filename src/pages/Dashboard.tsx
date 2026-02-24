@@ -95,7 +95,7 @@ export function Dashboard() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
           {season} Season
         </h1>
         <p className="text-gray-500 mt-1">

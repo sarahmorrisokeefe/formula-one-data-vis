@@ -158,8 +158,8 @@ export function HeadToHead() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-3">
-          <GitCompare className="h-7 w-7 text-[#e10600]" />
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-3 sm:text-3xl">
+          <GitCompare className="h-6 w-6 text-[#e10600] sm:h-7 sm:w-7" />
           Head-to-Head
         </h1>
         <p className="text-gray-500 mt-1">Compare two drivers across {season}</p>
@@ -189,7 +189,7 @@ export function HeadToHead() {
       {driver1Id && driver2Id && d1 && d2 && (
         <>
           {/* Stat Cards */}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
             {(
               [
                 { label: 'Points', key: 'points' as const },
