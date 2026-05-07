@@ -5,6 +5,7 @@ import {
   Line,
   XAxis,
   YAxis,
+  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
 } from 'recharts'
@@ -289,19 +290,29 @@ export function Dashboard() {
             <h2 className="font-semibold text-gray-900 dark:text-white">Title Fight</h2>
           </div>
           {overTimeQuery.isLoading ? (
-            <Skeleton variant="chart" height={160} />
+            <Skeleton variant="chart" height={200} />
           ) : overTimeQuery.isError ? (
             <ErrorState />
           ) : titleFight.rows.length < 2 ? (
-            <div className="flex items-center justify-center h-[160px] text-xs text-gray-500 text-center px-4">
+            <div className="flex items-center justify-center h-[200px] text-xs text-gray-500 text-center px-4">
               Season just started — trajectories appear after round 2.
             </div>
           ) : (
             <div>
-              <ResponsiveContainer width="100%" height={160}>
+              <ResponsiveContainer width="100%" height={200}>
                 <LineChart data={titleFight.rows}>
-                  <XAxis dataKey="round" hide />
-                  <YAxis hide />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#ffffff0a" />
+                  <XAxis
+                    dataKey="round"
+                    tick={{ fill: '#6b7280', fontSize: 11 }}
+                    axisLine={{ stroke: '#ffffff0a' }}
+                  />
+                  <YAxis
+                    tick={{ fill: '#6b7280', fontSize: 11 }}
+                    axisLine={false}
+                    tickLine={false}
+                    width={40}
+                  />
                   <Tooltip content={<CustomTooltip />} />
                   {titleFight.topThree.map((d) => (
                     <Line
