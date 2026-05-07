@@ -75,13 +75,21 @@ export function DriverProfile() {
   const driver = latestResult?.Driver
   const currentConstructor = latestResult?.Constructor
 
-  // Career arc: points per season
+  // Career arc: total points per season. Exclude the current (in-progress)
+  // season — partial-season totals create a misleading "drop" at the end of
+  // the arc that makes mid-year drivers look anomalous. We use UTC year
+  // rather than a "season completed" data signal because the jolpica/Ergast
+  // API doesn't expose one: driver results endpoints only return past races,
+  // not whether more rounds are scheduled. Worst case is a ~2-week false
+  // negative in late December for a fully-finished season.
+  const currentYear = new Date().getUTCFullYear()
   const careerByYear = new Map<number, number>()
   for (const race of careerRaces) {
     const yr = Number(race.season)
     careerByYear.set(yr, (careerByYear.get(yr) ?? 0) + Number(race.Results?.[0]?.points ?? 0))
   }
   const careerArcData = Array.from(careerByYear.entries())
+    .filter(([year]) => year < currentYear)
     .sort((a, b) => a[0] - b[0])
     .map(([year, points]) => ({ year, points }))
 
@@ -188,6 +196,10 @@ export function DriverProfile() {
         <p className="text-xs text-gray-500 mb-4">Total championship points per season</p>
         {careerQuery.isLoading ? (
           <Skeleton variant="chart" height={240} />
+        ) : careerArcData.length === 0 ? (
+          <div className="flex items-center justify-center h-[240px] text-xs text-gray-500 text-center px-4">
+            Career arc available after first completed season.
+          </div>
         ) : (
           <ResponsiveContainer width="100%" height={240}>
             <AreaChart data={careerArcData}>
