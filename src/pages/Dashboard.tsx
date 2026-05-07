@@ -5,11 +5,12 @@ import {
   Line,
   XAxis,
   YAxis,
+  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
 } from 'recharts'
 import { useSeason } from '@/context/SeasonContext'
-import { useDriverStandings, useConstructorStandings } from '@/hooks/useSeasonStandings'
+import { useDriverStandings, useConstructorStandings, useDriverStandingsOverTime } from '@/hooks/useSeasonStandings'
 import { useSeasonSchedule } from '@/hooks/useRaceData'
 import { Card } from '@/components/ui/Card'
 import { Skeleton, TableSkeleton } from '@/components/ui/Skeleton'
@@ -69,6 +70,7 @@ export function Dashboard() {
   const driversQuery = useDriverStandings(season)
   const constructorsQuery = useConstructorStandings(season)
   const scheduleQuery = useSeasonSchedule(season)
+  const overTimeQuery = useDriverStandingsOverTime(season)
 
   const topDrivers = driversQuery.data?.slice(0, 5) ?? []
   const topConstructors = constructorsQuery.data?.slice(0, 5) ?? []
@@ -79,10 +81,41 @@ export function Dashboard() {
   const nextRace = schedule.find(r => new Date(r.date) >= today)
   const lastRace = pastRaces[pastRaces.length - 1]
 
-  const sparklineData = topDrivers.slice(0, 3).map((d) => ({
-    name: d.driver.code,
-    pts: d.points,
-  }))
+  // Identify the current top 3 from the latest completed round's standings.
+  // This shifts mid-season as positions change — same semantics as the
+  // existing `driversQuery.data?.slice(0, 3)` pattern.
+  //
+  // The over-time hook fires per-round queries for the entire season schedule,
+  // including future rounds that the API answers with empty standings. We
+  // treat "completed" as standings.length > 0 — those are the only rounds we
+  // can plot, and only those should determine "top 3." Without this filter,
+  // `latest` ends up being the season's final scheduled round (empty), so
+  // topThree is [] and the chart renders blank.
+  //
+  // Build one row per completed round, with one numeric column per top-3
+  // driver code. The round value is pre-formatted as "R{n}" so the reused
+  // CustomTooltip renders it directly as the header.
+  const titleFight = (() => {
+    const rounds = overTimeQuery.data ?? []
+    const completedRounds = rounds.filter((r) => r.standings.length > 0)
+    if (completedRounds.length === 0) return { rows: [], topThree: [] }
+
+    const latest = completedRounds[completedRounds.length - 1]
+    const topThree = latest.standings.slice(0, 3)
+
+    const rows = completedRounds.map(({ round, standings }) => {
+      const row: Record<string, string | number> = { round: `R${round}` }
+      for (const top of topThree) {
+        const entry = standings.find(
+          (s) => s.driver.driverId === top.driver.driverId
+        )
+        row[top.driver.code] = entry?.points ?? 0
+      }
+      return row
+    })
+
+    return { rows, topThree }
+  })()
 
   const daysToNextRace = nextRace
     ? Math.ceil(
@@ -250,26 +283,42 @@ export function Dashboard() {
           )}
         </Card>
 
-        {/* Points Sparkline */}
+        {/* Title Fight: top-3 cumulative points trajectory */}
         <Card>
           <div className="flex items-center gap-2 mb-4">
             <TrendingUp className="h-4 w-4 text-[#e10600]" />
-            <h2 className="font-semibold text-gray-900 dark:text-white">Top 3 Points</h2>
+            <h2 className="font-semibold text-gray-900 dark:text-white">Title Fight</h2>
           </div>
-          {driversQuery.isLoading ? (
-            <Skeleton variant="chart" height={160} />
+          {overTimeQuery.isLoading ? (
+            <Skeleton variant="chart" height={200} />
+          ) : overTimeQuery.isError ? (
+            <ErrorState />
+          ) : titleFight.rows.length < 2 ? (
+            <div className="flex items-center justify-center h-[200px] text-xs text-gray-500 text-center px-4">
+              Season just started — trajectories appear after round 2.
+            </div>
           ) : (
             <div>
-              <ResponsiveContainer width="100%" height={160}>
-                <LineChart data={sparklineData}>
-                  <XAxis dataKey="name" hide />
-                  <YAxis hide />
+              <ResponsiveContainer width="100%" height={200}>
+                <LineChart data={titleFight.rows}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#ffffff0a" />
+                  <XAxis
+                    dataKey="round"
+                    tick={{ fill: '#6b7280', fontSize: 11 }}
+                    axisLine={{ stroke: '#ffffff0a' }}
+                  />
+                  <YAxis
+                    tick={{ fill: '#6b7280', fontSize: 11 }}
+                    axisLine={false}
+                    tickLine={false}
+                    width={40}
+                  />
                   <Tooltip content={<CustomTooltip />} />
-                  {topDrivers.slice(0, 3).map((d) => (
+                  {titleFight.topThree.map((d) => (
                     <Line
                       key={d.driver.driverId}
                       type="monotone"
-                      dataKey="pts"
+                      dataKey={d.driver.code}
                       stroke={d.constructor.color}
                       strokeWidth={2}
                       dot={false}
@@ -279,7 +328,7 @@ export function Dashboard() {
                 </LineChart>
               </ResponsiveContainer>
               <div className="flex gap-4 mt-2 justify-center flex-wrap">
-                {topDrivers.slice(0, 3).map((d) => (
+                {titleFight.topThree.map((d) => (
                   <div key={d.driver.driverId} className="flex items-center gap-1.5">
                     <span
                       className="inline-block h-2 w-4 rounded-full"
