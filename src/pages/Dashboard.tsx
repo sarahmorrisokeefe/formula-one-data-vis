@@ -84,17 +84,25 @@ export function Dashboard() {
   // This shifts mid-season as positions change — same semantics as the
   // existing `driversQuery.data?.slice(0, 3)` pattern.
   //
+  // The over-time hook fires per-round queries for the entire season schedule,
+  // including future rounds that the API answers with empty standings. We
+  // treat "completed" as standings.length > 0 — those are the only rounds we
+  // can plot, and only those should determine "top 3." Without this filter,
+  // `latest` ends up being the season's final scheduled round (empty), so
+  // topThree is [] and the chart renders blank.
+  //
   // Build one row per completed round, with one numeric column per top-3
   // driver code. The round value is pre-formatted as "R{n}" so the reused
   // CustomTooltip renders it directly as the header.
   const titleFight = (() => {
     const rounds = overTimeQuery.data ?? []
-    if (rounds.length === 0) return { rows: [], topThree: [] }
+    const completedRounds = rounds.filter((r) => r.standings.length > 0)
+    if (completedRounds.length === 0) return { rows: [], topThree: [] }
 
-    const latest = rounds[rounds.length - 1]
+    const latest = completedRounds[completedRounds.length - 1]
     const topThree = latest.standings.slice(0, 3)
 
-    const rows = rounds.map(({ round, standings }) => {
+    const rows = completedRounds.map(({ round, standings }) => {
       const row: Record<string, string | number> = { round: `R${round}` }
       for (const top of topThree) {
         const entry = standings.find(
