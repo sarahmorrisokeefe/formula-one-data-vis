@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Trophy, Building2, Flag, Calendar, TrendingUp } from 'lucide-react'
 import {
@@ -81,19 +80,20 @@ export function Dashboard() {
   const nextRace = schedule.find(r => new Date(r.date) >= today)
   const lastRace = pastRaces[pastRaces.length - 1]
 
-  const titleFight = useMemo(() => {
+  // Identify the current top 3 from the latest completed round's standings.
+  // This shifts mid-season as positions change — same semantics as the
+  // existing `driversQuery.data?.slice(0, 3)` pattern.
+  //
+  // Build one row per completed round, with one numeric column per top-3
+  // driver code. The round value is pre-formatted as "R{n}" so the reused
+  // CustomTooltip renders it directly as the header.
+  const titleFight = (() => {
     const rounds = overTimeQuery.data ?? []
     if (rounds.length === 0) return { rows: [], topThree: [] }
 
-    // Identify the current top 3 from the latest completed round's standings.
-    // This shifts mid-season as positions change — same semantics as the
-    // existing `driversQuery.data?.slice(0, 3)` pattern.
     const latest = rounds[rounds.length - 1]
     const topThree = latest.standings.slice(0, 3)
 
-    // Build one row per completed round, with one numeric column per top-3
-    // driver code. The round value is pre-formatted as "R{n}" so the reused
-    // CustomTooltip renders it directly as the header.
     const rows = rounds.map(({ round, standings }) => {
       const row: Record<string, string | number> = { round: `R${round}` }
       for (const top of topThree) {
@@ -106,7 +106,7 @@ export function Dashboard() {
     })
 
     return { rows, topThree }
-  }, [overTimeQuery.data])
+  })()
 
   const daysToNextRace = nextRace
     ? Math.ceil(
@@ -283,7 +283,7 @@ export function Dashboard() {
           {overTimeQuery.isLoading ? (
             <Skeleton variant="chart" height={160} />
           ) : overTimeQuery.isError ? (
-            <ErrorState onRetry={() => window.location.reload()} />
+            <ErrorState />
           ) : titleFight.rows.length < 2 ? (
             <div className="flex items-center justify-center h-[160px] text-xs text-gray-500 text-center px-4">
               Season just started — trajectories appear after round 2.
