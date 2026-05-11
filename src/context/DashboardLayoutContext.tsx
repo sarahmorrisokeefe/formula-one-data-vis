@@ -75,22 +75,48 @@ export function DashboardLayoutProvider({ children }: { children: React.ReactNod
     }
   }
 
+  // Internal functional-updater helper for mutators. Each mutator passes a
+  // reducer over the prev layout so two synchronous calls compose correctly
+  // (e.g. removeCard(a); removeCard(b) doesn't drop the first removal).
+  // localStorage write-through happens inside the setter callback against
+  // the resolved next value.
+  const updateLayout = (reducer: (prev: LayoutEntry[]) => LayoutEntry[]) => {
+    setLayoutState((prev) => {
+      const next = reducer(prev)
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+      } catch {
+        // See setLayout above; same rationale.
+      }
+      return next
+    })
+  }
+
   const addCard = (type: CardType) => {
-    setLayout([...layout, { id: newCardId(), type }])
+    updateLayout((prev) =>
+      // Defense in depth: if the AddCardModal ever bypasses its registry-minus-
+      // layout filter (race condition, future "quick-add" affordance, etc.),
+      // refuse to insert a second card of the same type.
+      prev.some((e) => e.type === type)
+        ? prev
+        : [...prev, { id: newCardId(), type }]
+    )
   }
 
   const removeCard = (id: string) => {
-    setLayout(layout.filter((entry) => entry.id !== id))
+    updateLayout((prev) => prev.filter((entry) => entry.id !== id))
   }
 
   const reorderCards = (fromIndex: number, toIndex: number) => {
-    if (fromIndex === toIndex) return
-    if (fromIndex < 0 || fromIndex >= layout.length) return
-    if (toIndex < 0 || toIndex >= layout.length) return
-    const next = layout.slice()
-    const [moved] = next.splice(fromIndex, 1)
-    next.splice(toIndex, 0, moved)
-    setLayout(next)
+    updateLayout((prev) => {
+      if (fromIndex === toIndex) return prev
+      if (fromIndex < 0 || fromIndex >= prev.length) return prev
+      if (toIndex < 0 || toIndex >= prev.length) return prev
+      const next = prev.slice()
+      const [moved] = next.splice(fromIndex, 1)
+      next.splice(toIndex, 0, moved)
+      return next
+    })
   }
 
   const resetToDefault = () => {
