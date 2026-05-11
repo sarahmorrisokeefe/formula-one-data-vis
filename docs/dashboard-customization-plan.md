@@ -124,16 +124,15 @@ This is small enough that I'd execute it as **two PRs**, not three:
 
 Splitting this way means PR A can ship and sit in production safely (no behavior change, easy to revert), while PR B can iterate on the editing UX without risk to the static-rendering path.
 
-## Open questions (need your input before implementing)
+## Resolved design decisions
 
-1. **Edit-mode trigger.** Where does the toggle live? Three options I'd consider:
-   - **Topbar icon** (small pencil/gear icon in the existing top navigation) — most discoverable, least clutter
-   - **Dashboard header button** ("Edit dashboard" pill next to the season picker) — clearest in-context
-   - **Long-press / right-click** — most minimal, least discoverable
-2. **Reset to default.** Should the edit toolbar include a "Reset to default" link? I assumed yes — flagging in case you'd rather omit it.
-3. **Hidden cards live where?** When a card is removed, it goes back into the "Available cards" pool (the Add Card modal). Alternatively we could just maintain the in-layout array and the registry; "available" is computed as `registry keys − layout types`. I'm planning the latter (no separate hidden-cards storage). Confirming that's fine.
-4. **D&D dep.** OK to add `@dnd-kit/core` (≈30 KB gzipped)? Alternative is up/down buttons, which avoid the dep but feel dated.
-5. **Mobile drag-and-drop.** `@dnd-kit` supports touch out of the box, but reordering by drag on a small screen can be fiddly. Acceptable, or do you want long-press-to-reveal up/down buttons specifically for mobile?
+These started as open questions; resolved on 2026-05-11.
+
+1. **Edit-mode trigger:** **topbar icon** next to the light/dark mode toggle. Discoverable from any page, no chrome added to the dashboard itself.
+2. **Reset to default:** **yes**, included in the edit toolbar as a small link.
+3. **Hidden cards storage:** computed on the fly as `registry keys − layout types`. No separate storage.
+4. **D&D dep:** `@dnd-kit/core` is in. ~30 KB gzipped is acceptable.
+5. **Mobile reorder UX:** `@dnd-kit`'s `TouchSensor` with an **activation delay of ~250 ms** (long-press to start drag). Matches the iOS home-screen sortable pattern — long-press to engage drag mode, accidental scrolls don't fire drag. No separate up/down-button affordance needed; the UX is identical between desktop and mobile, just with different activation gestures.
 
 ## Out of scope (deliberate, not oversights)
 
