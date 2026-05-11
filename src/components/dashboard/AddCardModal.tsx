@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Plus, X } from 'lucide-react'
 import {
   CARD_REGISTRY,
@@ -13,6 +13,8 @@ interface AddCardModalProps {
 
 export function AddCardModal({ open, onClose }: AddCardModalProps) {
   const { layout, addCard } = useDashboardLayout()
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null)
 
   // Available cards = registry types not currently in the layout.
   const usedTypes = new Set(layout.map((e) => e.type))
@@ -20,14 +22,27 @@ export function AddCardModal({ open, onClose }: AddCardModalProps) {
     (t) => !usedTypes.has(t)
   )
 
-  // Close on Escape.
+  // Close on Escape + focus management. aria-modal="true" claims focus is
+  // contained in the dialog; meeting that claim minimally means moving focus
+  // INTO the dialog on open and restoring it on close. Full focus-trap is
+  // overkill for an MVP; this satisfies screen readers and keyboard users.
   useEffect(() => {
     if (!open) return
+    // Remember the element that was focused before the modal opened so we
+    // can return focus there when the modal closes.
+    previouslyFocusedRef.current = document.activeElement as HTMLElement | null
+    // Move focus to the close button so keyboard users land somewhere sensible.
+    closeButtonRef.current?.focus()
     function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') onClose()
     }
     document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      // On close: restore focus to whatever opened the modal (e.g., the
+      // "Add card" button in the edit toolbar).
+      previouslyFocusedRef.current?.focus()
+    }
   }, [open, onClose])
 
   if (!open) return null
@@ -47,6 +62,7 @@ export function AddCardModal({ open, onClose }: AddCardModalProps) {
         <div className="flex items-center justify-between border-b border-gray-200 px-5 py-3 dark:border-white/[0.06]">
           <h2 className="font-semibold text-gray-900 dark:text-white">Add a card</h2>
           <button
+            ref={closeButtonRef}
             type="button"
             onClick={onClose}
             aria-label="Close"

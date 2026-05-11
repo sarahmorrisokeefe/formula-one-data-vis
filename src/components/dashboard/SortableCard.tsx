@@ -54,10 +54,12 @@ export function SortableCard({ entry, children }: SortableCardProps) {
           e.preventDefault()
           removeCard(entry.id)
         }}
-        // PointerDown also has to be stopped — dnd-kit's listeners initiate
-        // drag on pointerdown, not click, so a naive click handler still
-        // triggers a drag-grab before the button registers.
+        // PointerDown handles desktop (PointerSensor); TouchStart handles
+        // mobile (TouchSensor listens on touchstart directly, not via the
+        // synthesized pointer events). Both must be stopped so a long-press
+        // on the remove button doesn't initiate a drag.
         onPointerDown={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
         aria-label="Remove card"
         className="absolute top-2 right-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-gray-900/90 text-white shadow-md hover:bg-red-600 transition-colors"
       >
