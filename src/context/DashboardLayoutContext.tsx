@@ -11,6 +11,12 @@ const STORAGE_KEY = 'f1-dashboard-layout'
 interface DashboardLayoutContextValue {
   layout: LayoutEntry[]
   setLayout: (next: LayoutEntry[]) => void
+  isEditing: boolean
+  setEditing: (next: boolean) => void
+  addCard: (type: CardType) => void
+  removeCard: (id: string) => void
+  reorderCards: (fromIndex: number, toIndex: number) => void
+  resetToDefault: () => void
 }
 
 const DashboardLayoutContext = createContext<DashboardLayoutContextValue | null>(null)
@@ -44,8 +50,19 @@ function readStoredLayout(): LayoutEntry[] {
   }
 }
 
+// Small ID generator. crypto.randomUUID is supported in all modern browsers
+// (including Safari 15.4+); fall back to a timestamp-derived string for any
+// rare environment where it's missing.
+function newCardId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+  return `card-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+}
+
 export function DashboardLayoutProvider({ children }: { children: React.ReactNode }) {
   const [layout, setLayoutState] = useState<LayoutEntry[]>(readStoredLayout)
+  const [isEditing, setEditing] = useState(false)
 
   const setLayout = (next: LayoutEntry[]) => {
     setLayoutState(next)
@@ -58,8 +75,41 @@ export function DashboardLayoutProvider({ children }: { children: React.ReactNod
     }
   }
 
+  const addCard = (type: CardType) => {
+    setLayout([...layout, { id: newCardId(), type }])
+  }
+
+  const removeCard = (id: string) => {
+    setLayout(layout.filter((entry) => entry.id !== id))
+  }
+
+  const reorderCards = (fromIndex: number, toIndex: number) => {
+    if (fromIndex === toIndex) return
+    if (fromIndex < 0 || fromIndex >= layout.length) return
+    if (toIndex < 0 || toIndex >= layout.length) return
+    const next = layout.slice()
+    const [moved] = next.splice(fromIndex, 1)
+    next.splice(toIndex, 0, moved)
+    setLayout(next)
+  }
+
+  const resetToDefault = () => {
+    setLayout(DEFAULT_LAYOUT)
+  }
+
   return (
-    <DashboardLayoutContext.Provider value={{ layout, setLayout }}>
+    <DashboardLayoutContext.Provider
+      value={{
+        layout,
+        setLayout,
+        isEditing,
+        setEditing,
+        addCard,
+        removeCard,
+        reorderCards,
+        resetToDefault,
+      }}
+    >
       {children}
     </DashboardLayoutContext.Provider>
   )
