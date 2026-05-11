@@ -34,6 +34,10 @@ function readStoredLayout(): LayoutEntry[] {
         validTypes.includes(e.type as CardType)
     )
     if (!isValid) return DEFAULT_LAYOUT
+    // Duplicate ids would produce React "same key" warnings when the layout
+    // is rendered. Fall back to default if storage was hand-edited badly.
+    const ids = parsed.map((e) => e.id)
+    if (new Set(ids).size !== ids.length) return DEFAULT_LAYOUT
     return parsed as LayoutEntry[]
   } catch {
     return DEFAULT_LAYOUT
