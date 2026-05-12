@@ -1,7 +1,24 @@
 import { Trophy, Building2, Flag, Calendar } from 'lucide-react'
+import {
+  DndContext,
+  type DragEndEvent,
+  PointerSensor,
+  TouchSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  closestCenter,
+} from '@dnd-kit/core'
+import {
+  SortableContext,
+  rectSortingStrategy,
+  sortableKeyboardCoordinates,
+} from '@dnd-kit/sortable'
 import { useSeason } from '@/context/SeasonContext'
 import { useDashboardLayout } from '@/context/DashboardLayoutContext'
 import { CARD_REGISTRY } from '@/components/dashboard/cardRegistry'
+import { SortableCard } from '@/components/dashboard/SortableCard'
+import { DashboardEditToolbar } from '@/components/dashboard/DashboardEditToolbar'
 import { useDriverStandings, useConstructorStandings } from '@/hooks/useSeasonStandings'
 import { useSeasonSchedule } from '@/hooks/useRaceData'
 import { Card } from '@/components/ui/Card'
@@ -42,7 +59,7 @@ function StatCard({
 
 export function Dashboard() {
   const { season } = useSeason()
-  const { layout } = useDashboardLayout()
+  const { layout, isEditing, reorderCards } = useDashboardLayout()
   const driversQuery = useDriverStandings(season)
   const constructorsQuery = useConstructorStandings(season)
   const scheduleQuery = useSeasonSchedule(season)
@@ -62,6 +79,32 @@ export function Dashboard() {
           (1000 * 60 * 60 * 24)
       )
     : null
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      // Small distance threshold prevents tap-to-click being interpreted as
+      // drag-start on desktop.
+      activationConstraint: { distance: 4 },
+    }),
+    useSensor(TouchSensor, {
+      // 250 ms long-press before drag engages on touch. Prevents the page
+      // scroll gesture from accidentally initiating a card drag — same UX
+      // pattern as iOS home-screen icon sorting.
+      activationConstraint: { delay: 250, tolerance: 5 },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  )
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+    const from = layout.findIndex((e) => e.id === active.id)
+    const to = layout.findIndex((e) => e.id === over.id)
+    if (from === -1 || to === -1) return
+    reorderCards(from, to)
+  }
 
   return (
     <div className="space-y-6">
@@ -121,13 +164,44 @@ export function Dashboard() {
         )}
       </div>
 
-      {/* Main Grid: layout-driven */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {layout.map((entry) => {
-          const Component = CARD_REGISTRY[entry.type].Component
-          return <Component key={entry.id} />
-        })}
-      </div>
+      {/* Edit toolbar (rendered only when editing) */}
+      {isEditing && <DashboardEditToolbar />}
+
+      {/* Main Grid: layout-driven, with drag-and-drop when editing */}
+      {layout.length === 0 ? (
+        <div className="flex min-h-[200px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-gray-300 bg-gray-50 px-6 py-12 text-center dark:border-white/[0.08] dark:bg-white/[0.02]">
+          <p className="text-sm font-semibold text-gray-900 dark:text-white">
+            Your dashboard is empty
+          </p>
+          <p className="text-xs text-gray-500">
+            {isEditing
+              ? 'Click "Add card" above to get started.'
+              : 'Click the edit icon in the top bar to add cards.'}
+          </p>
+        </div>
+      ) : (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={layout.map((e) => e.id)}
+            strategy={rectSortingStrategy}
+          >
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+              {layout.map((entry) => {
+                const Component = CARD_REGISTRY[entry.type].Component
+                return (
+                  <SortableCard key={entry.id} entry={entry}>
+                    <Component />
+                  </SortableCard>
+                )
+              })}
+            </div>
+          </SortableContext>
+        </DndContext>
+      )}
     </div>
   )
 }

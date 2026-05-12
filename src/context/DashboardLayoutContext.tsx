@@ -11,6 +11,12 @@ const STORAGE_KEY = 'f1-dashboard-layout'
 interface DashboardLayoutContextValue {
   layout: LayoutEntry[]
   setLayout: (next: LayoutEntry[]) => void
+  isEditing: boolean
+  setEditing: (next: boolean) => void
+  addCard: (type: CardType) => void
+  removeCard: (id: string) => void
+  reorderCards: (fromIndex: number, toIndex: number) => void
+  resetToDefault: () => void
 }
 
 const DashboardLayoutContext = createContext<DashboardLayoutContextValue | null>(null)
@@ -44,8 +50,19 @@ function readStoredLayout(): LayoutEntry[] {
   }
 }
 
+// Small ID generator. crypto.randomUUID is supported in all modern browsers
+// (including Safari 15.4+); fall back to a timestamp-derived string for any
+// rare environment where it's missing.
+function newCardId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+  return `card-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+}
+
 export function DashboardLayoutProvider({ children }: { children: React.ReactNode }) {
   const [layout, setLayoutState] = useState<LayoutEntry[]>(readStoredLayout)
+  const [isEditing, setEditing] = useState(false)
 
   const setLayout = (next: LayoutEntry[]) => {
     setLayoutState(next)
@@ -58,8 +75,67 @@ export function DashboardLayoutProvider({ children }: { children: React.ReactNod
     }
   }
 
+  // Internal functional-updater helper for mutators. Each mutator passes a
+  // reducer over the prev layout so two synchronous calls compose correctly
+  // (e.g. removeCard(a); removeCard(b) doesn't drop the first removal).
+  // localStorage write-through happens inside the setter callback against
+  // the resolved next value.
+  const updateLayout = (reducer: (prev: LayoutEntry[]) => LayoutEntry[]) => {
+    setLayoutState((prev) => {
+      const next = reducer(prev)
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+      } catch {
+        // See setLayout above; same rationale.
+      }
+      return next
+    })
+  }
+
+  const addCard = (type: CardType) => {
+    updateLayout((prev) =>
+      // Defense in depth: if the AddCardModal ever bypasses its registry-minus-
+      // layout filter (race condition, future "quick-add" affordance, etc.),
+      // refuse to insert a second card of the same type.
+      prev.some((e) => e.type === type)
+        ? prev
+        : [...prev, { id: newCardId(), type }]
+    )
+  }
+
+  const removeCard = (id: string) => {
+    updateLayout((prev) => prev.filter((entry) => entry.id !== id))
+  }
+
+  const reorderCards = (fromIndex: number, toIndex: number) => {
+    updateLayout((prev) => {
+      if (fromIndex === toIndex) return prev
+      if (fromIndex < 0 || fromIndex >= prev.length) return prev
+      if (toIndex < 0 || toIndex >= prev.length) return prev
+      const next = prev.slice()
+      const [moved] = next.splice(fromIndex, 1)
+      next.splice(toIndex, 0, moved)
+      return next
+    })
+  }
+
+  const resetToDefault = () => {
+    setLayout(DEFAULT_LAYOUT)
+  }
+
   return (
-    <DashboardLayoutContext.Provider value={{ layout, setLayout }}>
+    <DashboardLayoutContext.Provider
+      value={{
+        layout,
+        setLayout,
+        isEditing,
+        setEditing,
+        addCard,
+        removeCard,
+        reorderCards,
+        resetToDefault,
+      }}
+    >
       {children}
     </DashboardLayoutContext.Provider>
   )
