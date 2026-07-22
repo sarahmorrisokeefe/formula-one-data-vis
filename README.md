@@ -1,73 +1,66 @@
-# React + TypeScript + Vite
+# F1 Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Formula 1 data visualization dashboard built with React, TypeScript, and D3/Recharts. Explore live championship standings, race results, driver and circuit profiles, and race strategy — all pulled from public F1 APIs.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Customizable dashboard** — drag-and-drop cards (standings, calendar, title fight tracker) with an edit mode powered by dnd-kit
+- **Championships** — full-season drivers' and constructors' standings
+- **Race Center** — race calendar and per-race results, lap positions, and tire strategy
+- **Driver profiles** — individual driver stats and season history
+- **Circuit guide** — track maps and circuit details
+- **Head-to-head** — compare two drivers or constructors directly
+- **Performance analysis** — charts for lap position trends, tire strategy, and driver heatmaps
+- **Light/dark theme**
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) + [Vite](https://vite.dev/)
+- [Tailwind CSS 4](https://tailwindcss.com/) for styling
+- [React Router](https://reactrouter.com/) for routing
+- [TanStack Query](https://tanstack.com/query) for data fetching/caching
+- [D3](https://d3js.org/) and [Recharts](https://recharts.org/) for charts
+- [dnd-kit](https://dndkit.com/) for drag-and-drop dashboard editing
+- [Lucide](https://lucide.dev/) for icons
 
-## Expanding the ESLint configuration
+## Data Sources
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- [Jolpica F1](https://api.jolpi.ca/ergast/f1) — championship standings, race schedules, and results (Ergast-compatible)
+- [OpenF1](https://openf1.org/) — session, stint, and pit stop data for strategy charts
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The app runs at `http://localhost:5173` by default.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Other scripts
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run build    # type-check and build for production
+npm run preview  # preview the production build locally
+npm run lint      # run ESLint
 ```
+
+## Project Structure
+
+```
+src/
+├── api/          # API clients (Jolpica, OpenF1)
+├── components/
+│   ├── charts/     # D3/Recharts visualizations
+│   ├── dashboard/  # Dashboard cards and edit-mode UI
+│   ├── layout/     # App shell, sidebar, topbar
+│   └── ui/         # Shared UI primitives
+├── context/      # Theme, season, and dashboard layout providers
+├── hooks/        # Data-fetching hooks
+├── pages/        # Route-level views
+└── types/        # Shared TypeScript types
+```
+
+## Deployment
+
+Configured for [Vercel](https://vercel.com/) (see `vercel.json`) as a single-page app with client-side routing.
